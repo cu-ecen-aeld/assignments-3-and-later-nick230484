@@ -17,7 +17,7 @@ jobs:
         runs-on: self-hosted
         steps:
           - uses: actions/checkout@v3.0.0
-             with:
+            with:
                 repo-token: ${{ secrets.GITHUB_TOKEN }}
           - name: Checkout submodules
             run : git submodule update --init --recursive
