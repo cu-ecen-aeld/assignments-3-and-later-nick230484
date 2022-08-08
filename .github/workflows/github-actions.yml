@@ -9,6 +9,7 @@ jobs:
           - name: Checkout submodules
             run : git submodule update --init --recursive
           - name: Run unit test
+<<<<<<< HEAD
             run: ./unit-test.sh 
     full-test:
         container: cuaesd/aesd-autotest:assignment2
@@ -19,3 +20,6 @@ jobs:
             run : git submodule update --init --recursive
           - name: Run full test
             run: ./full-test.sh
+=======
+            run: ./unit-test.sh
+>>>>>>> assignments-base/assignment3-part-1
