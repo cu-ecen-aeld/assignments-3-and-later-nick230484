@@ -1,5 +1,8 @@
 #include "systemcalls.h"
-
+#include "stdlib.h"
+#include <unistd.h>
+#include <sys/wait.h>
+#include <fcntl.h>
 /**
  * @param cmd the command to execute with system()
  * @return true if the command in @param cmd was executed
@@ -16,8 +19,19 @@ bool do_system(const char *cmd)
  *   and return a boolean true if the system() call completed with success
  *   or false() if it returned a failure
 */
+    int ret = system(cmd);
+    
+    if(ret==-1) {
+	 
+	return false;
 
-    return true;
+    } else {
+
+	return true;
+	 
+    }
+
+   
 }
 
 /**
@@ -58,9 +72,60 @@ bool do_exec(int count, ...)
  *   as second argument to the execv() command.
  *
 */
+    int status;
+    pid_t pid;
+    /*pid = fork();*/
+    /*int ret2;*/
 
+    if ((pid = fork()) == 0) {
+	      /* the child process */
+	      execv(command[0], command);
+	        /* if execv() was successful, this won't be reached */
+	        _exit(127);
+    }
+
+    if (pid > 0) {
+	/* the parent process calls waitpid() on the child */
+	if (waitpid(pid, &status, 0) > 0) {
+		          
+		if (WIFEXITED(status) && !WEXITSTATUS(status)) {
+			
+			/* the program terminated normally and executed successfully */
+		        printf("Program terminated succesfully \n");
+
+		} else if (WIFEXITED(status) && WEXITSTATUS(status)) {
+
+			if (WEXITSTATUS(status) == 127) {
+				/* execv() failed */
+				printf("Execv failed \n");
+				return false;
+
+			} else {
+				printf("The program terminated normally, but returned a non-zero status \n");
+				return false;
+	                } 
+
+		} else {
+
+		        printf("The program didn't terminate normally \n");
+                        return false;	
+
+		} 
+
+	} else {
+			
+		printf("Waitpid() failed \n");
+		return false;
+	}
+    } else {
+	    
+	    printf("Failed to fork() \n");
+	    return false;
+
+    }
+
+    
     va_end(args);
-
     return true;
 }
 
@@ -92,8 +157,58 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *   The rest of the behaviour is same as do_exec()
  *
 */
+    int status;
+    pid_t pid;
+    /*pid = fork();*/
+
+    if ((pid = fork()) == 0) {
+ 	/* the child process */
+	int fd = open(outputfile, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+	dup2(fd, 1);
+	execv(command[0], command);
+	close(fd);
+	/* if execv() was successful, this won't be reached */
+	_exit(127);
+    }
+
+    if (pid > 0) {
+	/* the parent process calls waitpid() on the child */
+	if (waitpid(pid, &status, 0) > 0) {
+
+		if (WIFEXITED(status) && !WEXITSTATUS(status)) {
+
+			/* the program terminated normally and executed successfully */
+			printf("Program terminated succesfully \n");
+
+		} else if (WIFEXITED(status) && WEXITSTATUS(status)) {
+
+			if (WEXITSTATUS(status) == 127) {
+				/* execv() failed */
+				printf("Execv failed \n");
+				return false;
+
+			} else {
+																										                                    printf("The program terminated normally, but returned a non-zero status \n"); 
+																														    return false;
+																												           }
+		} else {
+
+			printf("The program didn't terminate normally \n");
+			return false;																								                    }
+		} else {
+			
+			printf("Waitpid() failed \n");
+			return false;
+		}
+	} else {
+
+		printf("Failed to fork() \n");
+		return false;
+
+	}
+      				       
 
     va_end(args);
-
+    /*close(fd);*/
     return true;
 }
