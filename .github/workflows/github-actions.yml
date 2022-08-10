@@ -19,5 +19,5 @@ jobs:
             run : git submodule update --init --recursive
           - name: Run full test
             run: ./full-test.sh
-            run: ./unit-test.sh
+    
 
