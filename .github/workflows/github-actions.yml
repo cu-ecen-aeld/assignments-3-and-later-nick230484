@@ -22,4 +22,16 @@ jobs:
             run: ./full-test.sh
 =======
             run: ./unit-test.sh
+<<<<<<< HEAD
 >>>>>>> assignments-base/assignment3-part-1
+=======
+    full-test:
+        container: cuaesd/aesd-autotest:assignment3
+        runs-on: self-hosted
+        steps:
+          - uses: actions/checkout@v2
+          - name: Checkout submodules
+            run : git submodule update --init --recursive
+          - name: Run full test
+            run: ./full-test.sh
+>>>>>>> assignments-base/assignment3-part-2
