@@ -22,6 +22,12 @@ else
 fi
 
 mkdir -p ${OUTDIR}
+#prova poi rimuovere
+# TODO: Clean and build the writer utility
+cd "${FINDER_APP_DIR}"
+make clean
+make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE}
+#fine prova rimuovere
 
 cd "$OUTDIR"
 if [ ! -d "${OUTDIR}/linux-stable" ]; then
@@ -112,9 +118,9 @@ sudo mknod -m 600 dev/console c 5 1
 
 
 # TODO: Clean and build the writer utility
-cd "${FINDER_APP_DIR}"
-make clean
-make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE}
+#cd "${FINDER_APP_DIR}"
+#make clean
+#make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE}
 
 
 # TODO: Copy the finder related scripts and executables to the /home directory
