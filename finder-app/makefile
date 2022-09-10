@@ -1,31 +1,26 @@
+INCLUDE_DIRS = 
+LIB_DIRS = 
+CROSS_COMPILE=
+
+CDEFS=
+CFLAGS= -g -Wall $(INCLUDE_DIRS) $(CDEFS) 
+LIBS= -lrt
 
 
-#ifndef ($(CROSS_COMPILE))
-cc=gcc
-#endif
+SRCS= ${HFILES} ${CFILES}
+OBJS= ${CFILES:.c=.o}
 
-#cc=$(CROSS_COMPILE)
+all:	writer
 
-ifeq ($(CROSS_COMPILE),aarch64-none-linux-gnu-)
-	cc=/usr/local/install-lnx/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-gcc
-endif
-#cc=/fica/asta
+clean:
+	-rm -f *.o
+	-rm -f writer
 
-#CC = gcc
 
 writer: writer.o
-		$(cc) writer.o -o writer # Runs third
+	$(CROSS_COMPILE)gcc $(LDFLAGS) $(CFLAGS) -o $@ $@.o  -lpthread -lrt
 
-writer.o: writer.c
-		$(cc) -c writer.c -o writer.o # Runs second
-
-
-#writer: writer.c
-#	   $(CC) -o 
-
-#writer: writer.o
+depend:
 	
-#writer.o: writer.c
-	
-clean:
-	rm -f *.o writer *.elf *.map
+.c.o:
+	$(CROSS_COMPILE)gcc $(CFLAGS) -c $<
