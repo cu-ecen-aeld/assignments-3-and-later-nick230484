@@ -14,6 +14,13 @@ struct thread_data{
      * between the start_thread_obtaining_mutex function and
      * your thread implementation.
      */
+    int wait_to_obtain_ms;
+    int wait_to_release_ms;
+  
+    /**
+    * The mutex used to lock this account when manipulating values, for thread safety
+    */ 
+    pthread_mutex_t* mutex_thread;
 
     /**
      * Set to true if the thread completed with success, false
